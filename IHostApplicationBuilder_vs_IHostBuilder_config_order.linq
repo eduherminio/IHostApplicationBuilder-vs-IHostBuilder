@@ -75,7 +75,7 @@ public static class Extensions
 		_ = builder.ConfigureHostConfiguration(AddOurHostConfiguration);
 
 		_ = builder.ConfigureAppConfiguration((context, configBuilder) =>
-			configBuilder.AddOurApplicationConfiguration(context.Configuration, context.HostingEnvironment));
+			configBuilder.AddOurApplicationConfiguration(context.Configuration));
 
 		_ = builder.ConfigureServices((context, services) =>
 			services.AddOurServices(context.Configuration.GetSection("Cosmic")));
@@ -87,21 +87,16 @@ public static class Extensions
 		where TBuilder : IHostApplicationBuilder
 	{
 		builder.Configuration.AddOurHostConfiguration();
-		builder.Configuration.AddOurApplicationConfiguration(builder.Configuration, builder.Environment);
+		builder.Configuration.AddOurApplicationConfiguration(builder.Configuration);
 		builder.Services.AddOurServices(builder.Configuration.GetSection("Cosmic"));
 
 		return builder;
 	}
 
-	private static void AddOurServices(this IServiceCollection services, IConfigurationSection section)
-		=> services
-			.AddOptions<Metadata>()
-			.Bind(section);
-
 	private static void AddOurHostConfiguration(this IConfigurationBuilder configurationBuilder)
 		=> configurationBuilder.Add(new MetadataSource());
 
-	private static void AddOurApplicationConfiguration(this IConfigurationBuilder configurationBuilder, IConfiguration configuration, IHostEnvironment environment)
+	private static void AddOurApplicationConfiguration(this IConfigurationBuilder configurationBuilder, IConfiguration configuration)
 	{
 		var metadataVersionString = configuration[CosmicMetadataVersionEnvKey];
 
@@ -114,6 +109,11 @@ public static class Extensions
 			}
 		}
 	}
+
+	private static void AddOurServices(this IServiceCollection services, IConfigurationSection section)
+		=> services
+			.AddOptions<Metadata>()
+			.Bind(section);
 
 	public static T AddKeyValue<T>(this T configuration, params (string key, string value)[] tuple)
 		where T : IConfigurationBuilder

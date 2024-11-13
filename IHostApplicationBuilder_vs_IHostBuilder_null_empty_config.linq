@@ -53,8 +53,6 @@ void Main()
 
 		return builder.Build();
 	}
-
-
 }
 
 public static class Extensions

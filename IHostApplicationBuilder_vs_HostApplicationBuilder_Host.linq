@@ -18,13 +18,13 @@ void Main()
 		.AddR9Goodies_Generic()		// Stays as HostApplicationBuilder
 		.Build();
 
-	var host2 = builder1
+	var host1_2 = builder1
 		.AddR9Goodies_Interface()	// Transforms into IHostApplicationBuilder
 		.Build();					// Build error
 
 	IHostApplicationBuilder builder2 = Host.CreateEmptyApplicationBuilder(new());
 
-	var host3 = builder2
+	var host2 = builder2
 		.AddR9Goodies_Generic()		// Stays as IHostApplicationBuilder
 		.Build();					// Build error, regardless of using Generic or Interface extension
 }
@@ -36,4 +36,6 @@ public static class Extensions
 		=> builder;
 
 	public static IHostApplicationBuilder AddR9Goodies_Interface(this IHostApplicationBuilder builder) => builder;
+
+	public static IHostBuilder AddR9Goodies_Interface(this IHostBuilder builder) => builder;
 }
